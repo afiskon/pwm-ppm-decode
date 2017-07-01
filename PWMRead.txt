@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include <PinChangeInt.h>
 
-// see http://playground.arduino.cc/Main/PinChangeInt + https://github.com/GreyGnome/PinChangeInt
-
 #define NCHANNELS 8
 #define CH1_PIN 5 // CH2_PIN = CH1_PIN + 1, etc
 

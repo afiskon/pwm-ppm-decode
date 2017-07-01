@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include <PinChangeInt.h>
 
-// see http://playground.arduino.cc/Main/PinChangeInt + https://github.com/GreyGnome/PinChangeInt
-
 #define PPM_PIN 6
 #define MAX_CHANNELS 12
 
