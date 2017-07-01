@@ -1,0 +1,41 @@
+#include <Arduino.h>
+#include <PinChangeInt.h>
+
+// see http://playground.arduino.cc/Main/PinChangeInt + https://github.com/GreyGnome/PinChangeInt
+
+#define NCHANNELS 8
+#define CH1_PIN 5 // CH2_PIN = CH1_PIN + 1, etc
+
+volatile int pwm_value[NCHANNELS] = { 0 };
+volatile int prev_time[NCHANNELS] = { 0 };
+
+void rising();
+
+void falling() {
+  uint8_t pin = PCintPort::arduinoPin;
+  PCintPort::attachInterrupt(pin, &rising, RISING);
+  pwm_value[pin - CH1_PIN] = micros() - prev_time[pin - CH1_PIN];
+}
+
+void rising()
+{
+  uint8_t pin = PCintPort::arduinoPin;
+  PCintPort::attachInterrupt(pin, &falling, FALLING);
+  prev_time[pin-CH1_PIN] = micros();
+}
+
+void setup() {
+  for(uint8_t i = 0; i < NCHANNELS; i++) {
+    pinMode(CH1_PIN + i, INPUT_PULLUP);
+    PCintPort::attachInterrupt(CH1_PIN + i, &rising, RISING);
+  }
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  for(uint8_t i = 0; i < NCHANNELS; i++)
+    Serial.println("ch" + String(i+1) + " = " + String(pwm_value[i]));
+  Serial.println("----------------");
+  delay(1000);
+}
